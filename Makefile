@@ -112,7 +112,6 @@ CSRC = $(STARTUPSRC) \
        $(HALSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
-       $(TESTSRC) \
        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
        buffer.c serialmanager.c analogmanager.c canmanager.c batterymanager.c powerswitchmanager.c temperaturemanager.c speedmanager.c main.c
 

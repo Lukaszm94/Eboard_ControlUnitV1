@@ -16,7 +16,6 @@
 
 #include "ch.h"
 #include "hal.h"
-#include "test.h"
 #include "datatypes.h"
 #include "halconf.h"
 #include "chprintf.h"
@@ -83,7 +82,7 @@ static THD_FUNCTION(Thread2, arg) {
     // send data
     systime_t dt = chVTGetSystemTime() - lastPacketSentTimestamp;
     if(ST2MS(dt) > SM_PACKET_UPDATE_PERIOD) {
-      sm_sendDataPackets();
+      //sm_sendDataPackets();
       lastPacketSentTimestamp = chVTGetSystemTime();
     }
     // sleep
@@ -108,7 +107,7 @@ static THD_FUNCTION(Thread3, arg) {
       }
       chThdSleepMilliseconds(2000);
     } else*/ if(!ps_isEnabled()) {
-      chThdSleepMilliseconds(5000);
+      chThdSleepMilliseconds(2000);
       ps_enable();
     }
     chThdSleepMilliseconds(2000);

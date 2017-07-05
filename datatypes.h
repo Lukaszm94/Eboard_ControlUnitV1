@@ -59,9 +59,11 @@ typedef struct CANPacket3 {
 } CANPacket3;
 
 typedef struct CANLightsPacket {
-  uint8_t brightness; // in percent, *1
+  uint8_t frontBrightness; // in percent, *1
+  uint8_t frontBlinkingMode;
+  uint8_t rearBrightness; // in percent, *1
+  uint8_t rearBlinkingMode;
   uint8_t reactToBraking; // 0-no, 1-yes
-  uint8_t blinkingMode;
 } CANLightsPacket;
 
 typedef struct VESCBatteryData {

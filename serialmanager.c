@@ -60,7 +60,7 @@ void sm_receiveData(void)
 {
   uint8_t buffer[BUFFER_SIZE];
   int bytesRead = chnReadTimeout(&SD1, buffer, BUFFER_SIZE, TIME_IMMEDIATE);
-  if(bytesRead != 5) {
+  if(bytesRead != 7) {
     return;
   }
   if(buffer[0] != LIGHTS_PACKET_HEADER) {
@@ -69,18 +69,21 @@ void sm_receiveData(void)
 #endif
     return;
   }
-  if(buffer[4] != PACKET_END_CHAR) {
+  if(buffer[6] != PACKET_END_CHAR) {
 #if SM_SERIAL_DEBUG
     sm_chprintf("Buffer end char incorrect %c\n\r", buffer[3]);
 #endif
     return;
   }
   CANLightsPacket packet;
-  packet.brightness = buffer[1];
-  packet.reactToBraking = buffer[2];
-  packet.blinkingMode = buffer[3];
+  packet.frontBrightness = buffer[1];
+  packet.frontBlinkingMode = buffer[2];
+  packet.rearBrightness = buffer[3];
+  packet.rearBlinkingMode = buffer[4];
+  packet.reactToBraking = buffer[5];
+
 #if SM_SERIAL_DEBUG
-  sm_chprintf("Received correct lights packet, brightness: %d, braking: %d, mode: %d\n\r", packet.brightness, packet.reactToBraking, packet.blinkingMode);
+  sm_chprintf("Received correct lights packet, frontBrightness: %d,frontMode: %d, rearBrightness: %d, rearMode: %d, braking: %d\n\r", packet.frontBrightness, packet.frontBlinkingMode, packet.rearBrightness, packet.rearBlinkingMode, packet.reactToBraking);
 #endif
   cm_sendLightsPacket(packet);
 }

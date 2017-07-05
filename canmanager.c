@@ -26,8 +26,10 @@
 #define CAN_PACKET_STATUS_3 11
 #define CAN_PACKET_STATUS_3_SIZE 2
 // lights
-#define CAN_LIGHTS_PACKET 15
-#define CAN_LIGHTS_PACKET_SIZE 3
+#define CAN_FRONT_LIGHTS_PACKET 16
+#define CAN_FRONT_LIGHTS_PACKET_SIZE 2
+#define CAN_REAR_LIGHTS_PACKET 15
+#define CAN_REAR_LIGHTS_PACKET_SIZE 3
 
 
 CANRxFrame rxMsg;
@@ -75,17 +77,31 @@ void cm_run(void)
 void cm_sendLightsPacket(CANLightsPacket packet)
 {
   CANTxFrame txMsg;
+  // front lights packet
   txMsg.IDE = CAN_IDE_EXT;
-  txMsg.EID = cm_getEID(CU_ID, CAN_LIGHTS_PACKET);
+  txMsg.EID = cm_getEID(CU_ID, CAN_FRONT_LIGHTS_PACKET);
 #if CAN_SERIAL_DEBUG
   sm_chprintf("Sending packet, eid= %d\n\r", txMsg.EID);
 #endif
   txMsg.RTR = CAN_RTR_DATA;
-  txMsg.DLC = CAN_LIGHTS_PACKET_SIZE;
-  txMsg.data8[0] = packet.brightness;
-  txMsg.data8[1] = packet.reactToBraking;
-  txMsg.data8[2] = packet.blinkingMode;
+  txMsg.DLC = CAN_FRONT_LIGHTS_PACKET_SIZE;
+  txMsg.data8[0] = packet.frontBrightness;
+  txMsg.data8[1] = packet.frontBlinkingMode;
   cm_sendFrame(txMsg);
+
+  // rear lights packet
+  txMsg.IDE = CAN_IDE_EXT;
+  txMsg.EID = cm_getEID(CU_ID, CAN_REAR_LIGHTS_PACKET);
+  #if CAN_SERIAL_DEBUG
+    sm_chprintf("Sending packet, eid= %d\n\r", txMsg.EID);
+  #endif
+  txMsg.RTR = CAN_RTR_DATA;
+  txMsg.DLC = CAN_REAR_LIGHTS_PACKET_SIZE;
+  txMsg.data8[0] = packet.rearBrightness;
+  txMsg.data8[1] = packet.reactToBraking;
+  txMsg.data8[2] = packet.rearBlinkingMode;
+  cm_sendFrame(txMsg);
+
 }
 
 CANPacket1 cm_unpackPacket1(CANRxFrame frame)
